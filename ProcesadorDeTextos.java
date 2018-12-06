@@ -1,32 +1,38 @@
-public class ProcesadorDeTextos extends javax.swing.JPanel {
-
-    private javax.swing.JCheckBox NP1;
-    private javax.swing.JCheckBox NP2;
-    private javax.swing.JLabel lblTitulo;
-    private javax.swing.JTextField sustantivo1;
-    private javax.swing.JTextField sustantivo2;
-    private javax.swing.JTextField verbo;
+import java.io.*;
+import java.util.*; // Scanner
+public class ProcesadorDeTextos {
+    private Scanner lector;    
     
-    public ProcesadorDeTextos() {
-        initComponents();
+    public ProcesadorDeTextos(File archivo) {
+        try {
+           lector = new Scanner( archivo );
+        }
+        catch(FileNotFoundException e){
+           System.err.println("No encuentra archivo llamado "+ archivo.getAbsolutePath()+archivo.getName());        
+        }
     }
     
-    private void initComponents() {
-
-        lblTitulo = new javax.swing.JLabel();
-        sustantivo1 = new javax.swing.JTextField();
-        verbo = new javax.swing.JTextField();
-        sustantivo2 = new javax.swing.JTextField();
-        NP1 = new javax.swing.JCheckBox();
-        NP2 = new javax.swing.JCheckBox();
-
-        lblTitulo.setFont(new java.awt.Font("Arial", 0, 14)); 
-        lblTitulo.setText("PROCESADOR DE TEXTOS");
-
-        NP1.setText("NP");
-
-        NP2.setText("NP");
-
-        
+    
+    
+    public Termino nextTermino(){
+        String linea = null;
+        String token[] = new String [4];
+        Termino termino = null;
+        Scanner tokenScanner = null;
+        while( lector.hasNext() && termino==null){ 
+           linea = lector.nextLine();
+           tokenScanner = new Scanner(linea);
+           int i= 0;
+           while(tokenScanner.hasNext() && i<4){
+              token[i++] = tokenScanner.next();
+           }
+           if(i==4 && token[2].startsWith("N")||token[2].startsWith("VM")){
+              termino = new Termino( token[0],token[2],token[3]);
+           }
+        } 
+        return termino;
+    }
+    public boolean hasNext(){
+        return lector.hasNext();    
     }
 }

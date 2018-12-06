@@ -2,20 +2,21 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
 
 public class Pizarra extends JPanel{
     public static final String NOMBRES[] = {"SELECCIONAR","CARGAR"};
     public JTextField[] palabra;
     public JTextField txtArchivo;
     
-    public String pathArchivo;
+    public File archivo;
     
     public JButton seleccionador[];
     
     public JCheckBox esSusPropio[];
     public JButton buscador;
     
-    
+    public ProcesadorDeTextos procesador;
     public void initComponents(){
         
         txtArchivo = new JTextField(15);
@@ -35,13 +36,20 @@ public class Pizarra extends JPanel{
                 seleccionador.setVisible(true);
                 int returnVal = seleccionador.showDialog(Pizarra.this,"Select");
                 if (returnVal == JFileChooser.APPROVE_OPTION) {
-                    txtArchivo.setText(""+seleccionador.getSelectedFile().getName());
-                    pathArchivo = seleccionador.getSelectedFile().getPath();
+                    archivo = seleccionador.getSelectedFile();
+                   
                 }    
                 
             }
         });
         
+        seleccionador[1].addActionListener(new ActionListener() {
+        
+            public void actionPerformed(ActionEvent e) {
+                procesador = new ProcesadorDeTextos(archivo);
+                
+            }
+        });
         
         
         palabra = new JTextField[3];
